@@ -87,7 +87,7 @@ Route::get('Paises', function(){
         echo ("Poblacion: ".$infopais["Poblacion"]." Millones");
         echo "<hr />";
     }
-
+/*
     foreach ($paises as $pais => $infopais) {
         echo ("<h1>$pais</h1>");
         foreach ($infopais as $clave => $valor) {
@@ -95,7 +95,7 @@ Route::get('Paises', function(){
             echo "<hr />";
 
     }}*/
-
+    
     return view('paises')->with("paises",$paises);
 
 });
