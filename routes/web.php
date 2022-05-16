@@ -100,3 +100,7 @@ Route::get('Paises', function(){
 
 });
 
+Route::get('prueba', function(){
+return view('productos.new');
+});
+
