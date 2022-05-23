@@ -2,7 +2,8 @@
 @section('contenido')
 
 <div class="row">
-    <h1 class="teal-text ">Nuevo Producto</h1>
+    <h2 class="teal-text ">Formulario Nuevo Producto</h2>
+    <h4 class="teal-text text-lighten-1">Digite los Datos</h4> 
     <form action="" class="col s8" method="POST">
         <div class="row">
             <div class="col s8 input-field">

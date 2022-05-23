@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
-
-//Primera Ruta en Laravel
-Route::get('Hola', function(){ 
-echo "Hola.";
 });
 
 Route::get('arreglos', function(){ 
@@ -103,4 +99,7 @@ Route::get('Paises', function(){
 Route::get('prueba', function(){
 return view('productos.new');
 });
+
+//Crear las rutas Rest del Proyecto
+Route::resource('productos' , ProductoController::class);
 
