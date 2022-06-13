@@ -30,8 +30,8 @@ class ProductoController extends Controller
         $categorias = Categoria::all();
 
         return view('productos.new')
-        ->whith('marcas' , $marcas)
-        ->whith('categorias' , $categorias);
+        ->with('marcas' , $marcas)
+        ->with('categorias' , $categorias);
 
 
     }
@@ -44,7 +44,30 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Acceder datos Form utilizando $request
+        /*
+        echo "<pre>"; 
+        var_dump($request->nombre);        
+        var_dump($request->precio);        
+        var_dump($request->desc);
+        var_dump($request->imagen);
+        echo "</pre>"; 
+        */
+        $archivo = $request->imagen;
+        $nombre_archivo = $archivo->getClientOriginalName();
+        //Mover archivo a la carpeta creada para las Imagenes 
+        $ruta = public_path();
+        //Oli
+        $archivo->move("$ruta/img", $nombre_archivo);
+        $producto = new Producto;
+        $producto->nombre=$request->nombre;
+        $producto->precio=$request->precio;
+        $producto->descripcion=$request->desc;
+        $producto->imagen=$nombre_archivo;
+        $producto->marca_id=$request->marca;       
+        $producto->categoria_id=$request->categoria;
+        $producto->save();
+        echo "Producto Registrado";
     }
 
     /**
