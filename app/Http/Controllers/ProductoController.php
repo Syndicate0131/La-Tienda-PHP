@@ -6,6 +6,8 @@ use App\Models\Producto;
 use App\Models\Categoria;
 use App\Models\Marca;
 use Illuminate\Http\Request;
+//Dependecia Validador
+use Illuminate\Support\Facades\Validator;
 
 class ProductoController extends Controller
 {
@@ -43,31 +45,58 @@ class ProductoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //Acceder datos Form utilizando $request
-        /*
-        echo "<pre>"; 
-        var_dump($request->nombre);        
-        var_dump($request->precio);        
-        var_dump($request->desc);
-        var_dump($request->imagen);
-        echo "</pre>"; 
-        */
-        $archivo = $request->imagen;
-        $nombre_archivo = $archivo->getClientOriginalName();
-        //Mover archivo a la carpeta creada para las Imagenes 
-        $ruta = public_path();
-        //Oli
-        $archivo->move("$ruta/img", $nombre_archivo);
-        $producto = new Producto;
-        $producto->nombre=$request->nombre;
-        $producto->precio=$request->precio;
-        $producto->descripcion=$request->desc;
-        $producto->imagen=$nombre_archivo;
-        $producto->marca_id=$request->marca;       
-        $producto->categoria_id=$request->categoria;
-        $producto->save();
-        echo "Producto Registrado";
+{
+        $reglas = [
+            "nombre" => 'required|alpha|unique:productos,nombre',
+            "desc" => 'required|min:10|max:30',
+            "imagen" => 'required|image',
+            "precio" => 'required|numeric',
+            "categoria" => 'required',
+            "marca" => 'required'
+
+        ];
+
+        $mensajes=
+        [
+            "required" => "Este campo es oligatorio",
+            "alpha" => "El campo solo acepta caracteres alfabeticos",
+            "unique" => "Este producto ya esta registrado",
+            "min" => "El campo debe tener mas de 10 caracteres",
+            "max" => "El campo no debe superar los 30 caracteres",
+            "image" => "El archivo debe ser una imagen",
+            "numeric" => "El campo solo acepta caracteres numericos"
+
+
+        ];
+
+
+        //Objeto Validador    
+        $v = Validator::make($request->all(), $reglas, $mensajes);
+
+        //Validar
+        if ($v->fails()){
+            return redirect('productos/create')
+            ->withErrors($v);
+        }
+        else{
+            $archivo = $request->imagen;
+            $nombre_archivo = $archivo->getClientOriginalName();
+            //Mover archivo a la carpeta creada para las Imagenes 
+            $ruta = public_path();
+            //Oli
+            $archivo->move("$ruta/img", $nombre_archivo);
+            $producto = new Producto;
+            $producto->nombre=$request->nombre;
+            $producto->precio=$request->precio;
+            $producto->descripcion=$request->desc;
+            $producto->imagen=$nombre_archivo;
+            $producto->marca_id=$request->marca;       
+            $producto->categoria_id=$request->categoria;
+            $producto->save();
+            //redireccionar al formulario con mensaje de registro Exitoso
+            return redirect('productos/create')
+            ->with("mensajito", "Producto Registrado Con Exito");
+        }
     }
 
     /**
